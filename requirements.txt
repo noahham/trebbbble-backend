@@ -1,0 +1,10 @@
+requests~=2.32.3
+yt-dlp~=2025.2.19
+pillow~=11.1.0
+Flask~=3.1.0
+flask-cors~=5.0.1
+
+# keys.txt must be formatted as follows (without the comment hashes, obviously):
+# (ACRCloud Host URL)
+# (ACRCloud client ID)
+# (ACRCloud secret ID)
