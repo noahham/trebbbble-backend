@@ -60,18 +60,18 @@ def recognize_song(error: list) -> tuple:
         (str): Song artist.
     """
 
-    url = f"https://{os.environ.get("ACR_HOST")}/v1/identify"
+    url = f"https://{os.environ.get('ACR_HOST')}/v1/identify"
 
     timestamp = str(int(time.time()))
     http_method = "POST"
     http_uri = "/v1/identify"
     signature_version = "1"
 
-    string_to_sign = f"{http_method}\n{http_uri}\n{os.environ.get("ACR_CLIENT")}\naudio\n{signature_version}\n{timestamp}"
-    signature = base64.b64encode(hmac.new(os.environ.get("ACR_SECRET").encode("utf-8"), string_to_sign.encode("utf-8"), hashlib.sha1).digest()).decode("utf-8")
+    string_to_sign = f"{http_method}\n{http_uri}\n{os.environ.get('ACR_CLIENT')}\naudio\n{signature_version}\n{timestamp}"
+    signature = base64.b64encode(hmac.new(os.environ.get('ACR_SECRET').encode("utf-8"), string_to_sign.encode("utf-8"), hashlib.sha1).digest()).decode("utf-8")
 
     data = {
-        "access_key": os.environ.get("ACR_CLIENT"),
+        "access_key": os.environ.get('ACR_CLIENT'),
         "sample_bytes": os.path.getsize("output/temp.wav"),
         "timestamp": timestamp,
         "signature": signature,
