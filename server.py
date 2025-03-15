@@ -5,8 +5,13 @@ from scripts import main
 app = Flask(__name__)
 CORS(app)
 
+@app.route("/", methods=["GET"])
+def home():
+    return "Flask API is running. Use POST /process."
+
 @app.route('/process', methods=['POST'])
 def process():
+    print(request.get_json())
     url = request.get_json()['url']
 
     if not url:
@@ -20,7 +25,7 @@ def process():
 
     except Exception as e:
         return jsonify({
-            'error': str(e),
+            'errora': str(e),
             'success': False
         }), 500
 
