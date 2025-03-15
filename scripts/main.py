@@ -10,30 +10,6 @@ from PIL import Image
 from io import BytesIO
 import numpy as np
 
-def load_api_keys(file_path : str) -> dict:
-    """
-    Reads API keys from a text file and returns them as a dictionary.
-
-    Args:
-        file_path (str): Path to the file containing the API keys.
-
-    Returns:
-        dict: A dictionary containing the API keys.
-    """
-
-    with open(file_path, "r") as f:
-        keys = [line.strip() for line in f.readlines()]
-
-    if len(keys) != 3:
-        raise ValueError(
-            "Invalid key file format. Ensure 3 lines: ACRCloud Host URL, ACRCloud Client Key, ACRCloud Secret Key.")
-
-    return {
-        "ACR_HOST" : keys[0],
-        "ACR_ACCESS_KEY": keys[1],
-        "ACR_ACCESS_SECRET": keys[2]
-    }
-
 def download_video(url : str, error: list) -> None:
     """
     Scrapes video from either Reels, YT Shorts, or TikTok and writes to working directory.
@@ -84,19 +60,18 @@ def recognize_song(error: list) -> tuple:
         (str): Song artist.
     """
 
-    api_keys = load_api_keys("keys.txt")
-    url = f"https://{api_keys["ACR_HOST"]}/v1/identify"
+    url = f"https://{os.getenv("ACR_HOST")}/v1/identify"
 
     timestamp = str(int(time.time()))
     http_method = "POST"
     http_uri = "/v1/identify"
     signature_version = "1"
 
-    string_to_sign = f"{http_method}\n{http_uri}\n{api_keys["ACR_ACCESS_KEY"]}\naudio\n{signature_version}\n{timestamp}"
-    signature = base64.b64encode(hmac.new(api_keys["ACR_ACCESS_SECRET"].encode("utf-8"), string_to_sign.encode("utf-8"), hashlib.sha1).digest()).decode("utf-8")
+    string_to_sign = f"{http_method}\n{http_uri}\n{os.getenv("ACR_CLIENT")}\naudio\n{signature_version}\n{timestamp}"
+    signature = base64.b64encode(hmac.new(os.getenv("ACR_SECRET").encode("utf-8"), string_to_sign.encode("utf-8"), hashlib.sha1).digest()).decode("utf-8")
 
     data = {
-        "access_key": api_keys["ACR_ACCESS_KEY"],
+        "access_key": os.getenv("ACR_CLIENT"),
         "sample_bytes": os.path.getsize("output/temp.wav"),
         "timestamp": timestamp,
         "signature": signature,
