@@ -1,5 +1,6 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
+import os
 from scripts import main
 
 app = Flask(__name__)
@@ -28,6 +29,10 @@ def process():
             'errora': str(e),
             'success': False
         }), 500
+
+@app.route('/media/cover.jpg')
+def media_files():
+    return send_from_directory('media', 'cover.jpg')
 
 if __name__ == '__main__':
     app.run()
