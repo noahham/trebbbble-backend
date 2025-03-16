@@ -21,18 +21,23 @@ def download_video(url: str, error: list) -> None:
 
     try:
         if "youtube.com" in url or "youtu.be" in url:
+            cookies_var = "YT_COOKIES"
             if "shorts" not in url:  # YouTube Shorts only
                 print("Not a YouTube Shorts link.")
                 error.append("Only YouTube SHORTS links are supported at the moment.")
                 return
+        elif "tiktok.com" in url:
+            cookies_var = "TK_COOKIES"
+        else:
+            cookies_var = "IG_COOKIES"
 
         # Write IG_COOKIES to a temp file if present
         cookies_file = None
-        ig_cookies_base64 = os.environ.get("IG_COOKIES")
-        if ig_cookies_base64:
+        cookies_base64 = os.environ.get(cookies_var)
+        if cookies_base64:
             cookies_file = "cookies.txt"
             with open(cookies_file, "wb") as f:
-                f.write(base64.b64decode(ig_cookies_base64))
+                f.write(base64.b64decode(cookies_base64))
 
         # yt-dlp options
         ydl_opts = {
