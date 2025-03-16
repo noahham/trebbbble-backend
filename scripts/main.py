@@ -28,11 +28,11 @@ def download_video(url: str, error: list) -> None:
 
         # Write IG_COOKIES to a temp file if present
         cookies_file = None
-        ig_cookies = os.environ.get("IG_COOKIES")
-        if ig_cookies:
+        ig_cookies_base64 = os.environ.get("IG_COOKIES")
+        if ig_cookies_base64:
             cookies_file = "cookies.txt"
-            with open(cookies_file, "w") as f:
-                f.write(ig_cookies)
+            with open(cookies_file, "wb") as f:
+                f.write(base64.b64decode(ig_cookies_base64))
 
         # yt-dlp options
         ydl_opts = {
