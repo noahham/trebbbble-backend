@@ -10,7 +10,7 @@ from PIL import Image
 from io import BytesIO
 import numpy as np
 
-def download_video(url : str, error: list) -> None:
+def download_video(url: str, error: list) -> None:
     """
     Scrapes video from either Reels, YT Shorts, or TikTok and writes to working directory.
 
@@ -21,10 +21,18 @@ def download_video(url : str, error: list) -> None:
 
     try:
         if "youtube.com" in url or "youtu.be" in url:
-            if "shorts" not in url: # YouTube Shorts only
+            if "shorts" not in url:  # YouTube Shorts only
                 print("Not a YouTube Shorts link.")
                 error.append("Only YouTube SHORTS links are supported at the moment.")
                 return
+
+        # Write IG_COOKIES to a temp file if present
+        cookies_file = None
+        ig_cookies = os.getenv("IG_COOKIES")
+        if ig_cookies:
+            cookies_file = "cookies.txt"
+            with open(cookies_file, "w") as f:
+                f.write(ig_cookies)
 
         # yt-dlp options
         ydl_opts = {
@@ -37,8 +45,11 @@ def download_video(url : str, error: list) -> None:
                 "key": "FFmpegExtractAudio",
                 "preferredcodec": "wav",  # Convert to WAV
                 "preferredquality": "0"  # Best quality
-            }]
+            }],
         }
+
+        if cookies_file:
+            ydl_opts["cookiefile"] = cookies_file  # Pass cookies to yt-dlp
 
         print(f"Downloading video...")
 
@@ -47,9 +58,13 @@ def download_video(url : str, error: list) -> None:
 
         print("Download successful.")
 
-    except:
+        # Cleanup
+        if cookies_file:
+            os.remove(cookies_file)  # Remove temp cookies file
+
+    except Exception as e:
         error.append("Invalid URL. Please enter a valid TikTok, Instagram Reels, or YouTube Shorts URL.")
-        print("Invalid URL.")
+        print(f"Error: {e}")
 
 def recognize_song(error: list) -> tuple:
     """
@@ -261,3 +276,6 @@ def main(url):
         color = get_color()
 
     return generate_output(t, a, cover, color, error_msg)
+
+if __name__ == "__main__":
+    print(main("https://www.instagram.com/reels/DHNIsklRe-Y/")) # Change URL to test
