@@ -147,7 +147,7 @@ def get_album_cover(title: str, artist: str) -> bool:
                 image = image.resize((300, 300), Image.BICUBIC)
 
                 print('cover')
-                image.save("../media/cover.jpg", "JPEG")
+                image.save("media/cover.jpg", "JPEG")
 
                 print("Album cover saved.")
                 return True
