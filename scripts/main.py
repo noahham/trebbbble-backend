@@ -146,7 +146,6 @@ def get_album_cover(title: str, artist: str) -> bool:
                 image = Image.open(BytesIO(image_response.content))
                 image = image.resize((300, 300), Image.BICUBIC)
 
-                print('cover')
                 image.save("media/cover.jpg", "JPEG")
 
                 print("Album cover saved.")
@@ -166,9 +165,9 @@ def get_color() -> str:
     Returns:
          str: String representing the most vibrant color in HEX format, or None if the image does not exist.
     """
-    print('color')
-    if os.path.exists("../media/cover.jpg"):
-        image = Image.open("../media/cover.jpg").convert("RGB")
+
+    if os.path.exists("media/cover.jpg"):
+        image = Image.open("media/cover.jpg").convert("RGB")
         pixels = np.array(image)
 
         # Flattens to (R, G, B)
