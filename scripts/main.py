@@ -28,7 +28,7 @@ def download_video(url: str, error: list) -> None:
 
         # Write IG_COOKIES to a temp file if present
         cookies_file = None
-        ig_cookies = os.getenv("IG_COOKIES")
+        ig_cookies = os.environ.get("IG_COOKIES")
         if ig_cookies:
             cookies_file = "cookies.txt"
             with open(cookies_file, "w") as f:
