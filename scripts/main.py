@@ -281,6 +281,3 @@ def main(url):
         color = get_color()
 
     return generate_output(t, a, cover, color, error_msg)
-
-if __name__ == "__main__":
-    print(main("https://www.instagram.com/reels/DHNIsklRe-Y/")) # Change URL to test
